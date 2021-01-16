@@ -1,0 +1,13 @@
+#!/usr/bin/env variant
+
+tasks:
+  localstack:
+    script: |
+      docker-compose -f localstack.yml up -d
+      docker-compose -f localstack.yml logs -f
+  localstack-restart:
+    script: |
+      docker-compose -f localstack.yml restart
+  localstack-reset:
+    script: |
+      docker-compose -f localstack.yml down -v
