@@ -1,0 +1,6 @@
+#!/bin/bash
+
+awslocal secretsmanager get-secret-value \
+  --secret-id ansible-vault \
+  --query SecretString \
+  --output text | jq -r '.default.password'

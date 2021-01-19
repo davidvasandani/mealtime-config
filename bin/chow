@@ -1,0 +1,86 @@
+#!/usr/bin/env variant
+
+tasks:
+  localstack:
+    script: |
+      docker-compose -f localstack.yml up -d
+      echo "sleeping for 30 seconds to wait for localstack to boot"
+      sleep 30
+  localstack-restart:
+    script: |
+      docker-compose -f localstack.yml restart
+      docker-compose -f localstack.yml logs -f
+  localstack-reset:
+    script: |
+      docker-compose -f localstack.yml down -v
+      rm -rf data/data/*
+  terraform-localstack-apply:
+    script: |
+      cd terraform/localstack
+      source .envrc
+      terraform apply
+  terraform-localstack-init:
+    script: |
+      cd terraform/localstack
+      terraform init
+  terraform-localstack-destroy:
+    script: |
+      cd terraform/localstack
+      terraform destroy --force
+  ansible-localstack:
+    script: |
+      cd ansible
+      ansible-playbook playbook.yml --vault-password-file .vault_pass_localstack
+  test-localstack:
+    script: |
+      cd test
+      source .envrc
+      echo $BUCKET_NAME
+      echo "hello" > hello.txt | awslocal s3 cp hello.txt s3://$BUCKET_NAME/hello.txt
+      awslocal sts get-caller-identity
+      awslocal s3 ls s3://$BUCKET_NAME
+      awslocal s3 cp s3://$BUCKET_NAME/hello.txt -
+  terraform-aws-apply:
+    script: |
+      cd terraform/aws
+      source .envrc
+      terraform apply
+  terraform-aws-init:
+    script: |
+      cd terraform/aws
+      terraform init
+  terraform-aws-destroy:
+    script: |
+      cd terraform/aws
+      terraform destroy --force
+  ansible-aws:
+    script: |
+      cd ansible
+      ansible-playbook playbook.yml --vault-password-file .vault_pass_aws
+  test-aws:
+    script: |
+      cd test
+      source .envrc
+      aws sts get-caller-identity
+      echo "hello" > hello.txt | aws s3 cp hello.txt s3://$BUCKET_NAME/hello.txt
+      aws s3 cp s3://$BUCKET_NAME/hello.txt -
+      source .envrc_deny_user
+      aws sts get-caller-identity
+      aws s3 ls s3://$BUCKET_NAME/
+  reset:
+    script: |
+      chow localstack-reset
+      rm -rf terraform/localstack/.terraform
+      rm -f terraform/localstack/terraform.*
+      rm -rf terraform/aws/.terraform
+      rm -f terraform/aws/terraform.*
+      rm -f terraform/aws/*.tfstate
+      rm -rf terraform/aws/init/.terraform
+      rm -f terraform/aws/init/terraform.*
+      rm -f terraform/aws/init/*.tfstate
+      rm -f terraform/aws/init/backend.tf
+      rm -f ansible/app.conf
+      rm -f ansible/secrets.yml
+      rm -f ansible/vars.yml
+      rm -f test/*
+      rm -f test/.envrc*

@@ -1,0 +1,17 @@
+---
+- hosts: localhost
+  vars_files:
+    - vars.yml
+  tasks:
+    - name: template app.conf
+      ansible.builtin.template:
+        src: app.j2
+        dest: app.conf
+    - name: template aws_credentials.yml
+      ansible.builtin.template:
+        src: credentials.j2
+        dest: ../test/aws_credentials.yml
+    - name: template .envrc
+      ansible.builtin.template:
+        src: envrc.j2
+        dest: ../test/.envrc
