@@ -1,4 +1,4 @@
-# MenuTime App Infrastructure Config
+# MealTime App Infrastructure Config
 
 ## **Requirements**
 
@@ -38,7 +38,7 @@ If the backend is deployed to an instance with a static IP define it as a S3 Buc
       }
 ```
 
-Ansible can [lookup up secrets stored in AWS Secrets Manager](https://docs.ansible.com/ansible/latest/collections/amazon/aws/aws_secret_lookup.html) and depending on the infrastructure config, storing secrets in there vs Ansible Vault may be better for compatibility with other systems.
+Ansible can [lookup up secrets stored in AWS Secrets Manager](https://docs.ansible.com/ansible/latest/collections/amazon/aws/aws_secret_lookup.html) and depending on the infrastructure config, storing secrets there vs Ansible Vault may be better for compatibility with other systems in AWS.
 
 Including support for multiple environments (dev, staging, prod) would be simple by using `terraform.workspace` in variable names.
 
