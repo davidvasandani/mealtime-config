@@ -19,7 +19,7 @@ The playbook runs against localhost and deliver the app config to a temp locatio
 
 ### **Notes**
 
-This app config is likely being deployed to a environment outside of AWS (bare metal, Azure, etc.
+This app config is likely being deployed to a environment outside of AWS (bare metal, Azure, etc).
 Outside of AWS its recommended to [create a REST API as an Amazon S3 proxy in API Gateway](https://docs.aws.amazon.com/apigateway/latest/developerguide/integrating-api-with-aws-services-s3.html) secured with by [a Lambda authorizer](https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-use-lambda-authorizer.html) using a JSON Web Token. Inside AWS an EC2 Instance Profile that assumes the IAM role with S3 access is the best approach.
 
 Terraform can write files directly so there is an opportunity to optimize the setup by removing Ansible from the workflow.
